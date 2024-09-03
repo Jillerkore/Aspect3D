@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import io.github.jillerkore.ecs.component.*;
+import io.github.jillerkore.ecs.system.GeneralMovementSystem;
 import io.github.jillerkore.ecs.system.PlayerMovementSystem;
 import io.github.jillerkore.ecs.system.RenderSystem;
 import io.github.jillerkore.screens.GameScreen;
@@ -37,6 +38,7 @@ public class EntityEngineHandler {
         engine.addEntity(playerEntity);
 
         engine.addSystem(new PlayerMovementSystem(camera));
+        engine.addSystem(new GeneralMovementSystem());
         engine.addSystem(new RenderSystem(batch, camera));
 
     }

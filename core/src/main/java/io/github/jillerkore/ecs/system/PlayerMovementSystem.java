@@ -10,6 +10,13 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import io.github.jillerkore.ecs.component.*;
 
+
+/*
+* Goal of the system:
+* ONLY influence the player's camera and the player's velocity (based on which button
+* he's clicking). The movement itself is handled for all entities with movement enabled by
+* the GeneralMovementSystem
+ */
 public class PlayerMovementSystem extends EntitySystem {
 
     Entity playerEntity;
@@ -45,15 +52,14 @@ public class PlayerMovementSystem extends EntitySystem {
         updateKeyPress(input, position);
 
         // Key press handle
-        if (input.w) {
-            moveForward(deltaTime * velocity.v, position);
-        }
-        if (input.a)
-            strafe(-deltaTime * velocity.v, position);
+        if (input.w)
+            moveForward(velocity.v, velocity);
         if (input.s)
-            moveForward(-deltaTime * velocity.v, position);
+            moveForward(-velocity.v, velocity);
+        if (input.a)
+            strafe(-velocity.v, velocity);
         if (input.d)
-            strafe(deltaTime * velocity.v, position);
+            strafe(velocity.v, velocity);
 
         // Mouse movement handle
         float deltaX = -Gdx.input.getDeltaX() * degreesPerPixel;
@@ -72,24 +78,24 @@ public class PlayerMovementSystem extends EntitySystem {
 
     }
 
-    private void moveForward(float distance, PositionComponent position) {
+    private void moveForward(float vel, VelocityComponent velocity) {
 
         fwdHorizontal.set(camera.direction).y = 0;
         fwdHorizontal.nor();
-        fwdHorizontal.scl(distance);
+        fwdHorizontal.scl(vel);
 
-        position.x += fwdHorizontal.x;
-        position.z += fwdHorizontal.z;
+        velocity.x += fwdHorizontal.x;
+        velocity.z += fwdHorizontal.z;
 
     }
 
-    private void strafe(float distance, PositionComponent position) {
+    private void strafe(float vel, VelocityComponent velocity) {
         fwdHorizontal.set(camera.direction).y = 0;
         fwdHorizontal.nor();
-        tmp.set(fwdHorizontal).crs(camera.up).nor().scl(distance);
+        tmp.set(fwdHorizontal).crs(camera.up).nor().scl(vel);
 
-        position.x += tmp.x;
-        position.z += tmp.z;
+        velocity.x += tmp.x;
+        velocity.z += tmp.z;
     }
 
     private void rotateView(float deltaX, float deltaY) {
