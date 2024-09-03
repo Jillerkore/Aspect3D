@@ -19,7 +19,7 @@ public class RenderSystem extends IteratingSystem {
         this.camera = camera;
     }
 
-     // Called for each entity automatically
+     // Called for each entity automatically AFTER the batch has begun
     @Override
     protected void processEntity(Entity entity, /* Delta Time */ float v) {
 
