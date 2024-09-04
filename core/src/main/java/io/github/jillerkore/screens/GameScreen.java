@@ -20,6 +20,8 @@ public class GameScreen implements Screen {
     // Model and Environment declarations
     private ModelBatch modelBatch;
 
+    // Test Code
+
     private boolean initialized = false;
 
     private EntityEngineHandler entityEngineHandler;
@@ -41,9 +43,9 @@ public class GameScreen implements Screen {
             camera.far = 300f;
             camera.update();
 
-            entityEngineHandler = new EntityEngineHandler(this, camera, modelBatch);
+            world = new MainWorld(assetManager);
+            entityEngineHandler = new EntityEngineHandler(camera, modelBatch, assetManager, world);
 
-            world = new MainWorld();
 
         }
     }

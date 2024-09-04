@@ -19,7 +19,6 @@ import io.github.jillerkore.ecs.component.*;
  */
 public class PlayerMovementSystem extends EntitySystem {
 
-    Entity playerEntity;
     PerspectiveCamera camera;
     protected final float degreesPerPixel = 0.05f;
 
@@ -36,13 +35,19 @@ public class PlayerMovementSystem extends EntitySystem {
 
 
     public void addedToEngine(Engine engine) {
-        playerEntity = getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
     }
 
     public void removedFromEngine(Engine engine) {
     }
 
     public void update(float deltaTime) {
+        Entity playerEntity;
+        try {
+            playerEntity = getEngine().getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error: Player is not initialized yet.");
+            return;
+        }
 
         PositionComponent position = ComponentMappers.position.get(playerEntity);
         VelocityComponent velocity = ComponentMappers.velocity.get(playerEntity);

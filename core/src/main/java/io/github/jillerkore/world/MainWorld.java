@@ -1,6 +1,7 @@
 package io.github.jillerkore.world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -18,9 +19,15 @@ public class MainWorld {
     private Model modelGround;
     private Texture textureGround;
     private Array<ModelInstance> instances;
+    private final AssetManager assetManager;
+    private boolean initialized = false;
 
-    public MainWorld() {
-        init();
+    public MainWorld(AssetManager assetManager) {
+        this.assetManager = assetManager;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 
     private void init() {
@@ -29,7 +36,7 @@ public class MainWorld {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-        textureGround = new Texture(Gdx.files.internal("textures/Stylized_Stone_Floor_005_basecolor.jpg"), true);
+        textureGround = assetManager.get("textures/Stylized_Stone_Floor_005_basecolor.jpg", Texture.class);
         textureGround.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Linear);
         textureGround.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         TextureRegion textureRegion = new TextureRegion(textureGround);
@@ -46,6 +53,12 @@ public class MainWorld {
     }
 
     public void render(float delta, ModelBatch batch, PerspectiveCamera camera) {
+
+        // To make sure that the initialization occurs AFTER the texture has been loaded into assetManager
+        // This is because the render function is only called after the texture is loaded.
+        if (!initialized)
+            init();
+
         // Screen already cleared, only render world here
         batch.render(instances, environment);
     }

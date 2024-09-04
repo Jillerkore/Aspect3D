@@ -27,7 +27,16 @@ public class GeneralMovementSystem extends IteratingSystem {
         position.y += velocity.y * deltaTime;
         position.z += velocity.z * deltaTime;
 
-        // Since the velocity is supposed to be updated at every tick.
+        /*
+        * The velocity is supposed to be updated every tick for all entities.
+        * After movement, the velocity is nullified. Then, in the next iteration, if the player
+        * is supposed to move then the PlayerMovementSystem will assign values to x, y and z
+        * components of the velocity then this system will use the velocities and again nullify
+        * it.
+        * Note for future: For players, the velocity value is assigned every tick by
+        * PlayerMovementSystem, but for other entities, another System has to be created.
+        */
+
         velocity.x = 0;
         velocity.y = 0;
         velocity.z = 0;
